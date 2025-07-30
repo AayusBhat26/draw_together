@@ -2,7 +2,7 @@ import { createServer } from "http";
 
 import {} from "@/common/types/global";
 
-import express from "express";
+import express, { Request, Response } from "express";
 import next, { NextApiHandler } from "next";
 import { Server } from "socket.io";
 import { v4 } from "uuid";
@@ -18,7 +18,7 @@ nextApp.prepare().then(async () => {
 
   const io = new Server<ClientToServerEvents, ServerToClientEvents>(server);
 
-  app.get("/health", async (_, res) => {
+  app.get("/health", async (_: Request, res: Response) => {
     res.send("Healthy");
   });
 

@@ -1,3 +1,0 @@
-# Digiboard
-
-## Real time Whiteboard

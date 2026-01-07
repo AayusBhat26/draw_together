@@ -133,6 +133,13 @@ nextApp.prepare().then(async () => {
 
       io.to(socket.id).emit("your_move", { ...move, timestamp });
 
+      // Debug logging for image moves
+      if (move.options.shape === "image") {
+        console.log(`[SERVER] Broadcasting image move from ${socket.id}`);
+        console.log(`[SERVER] Image data size: ${move.img?.base64?.length || 0} chars`);
+        console.log(`[SERVER] Room ID: ${roomId}`);
+      }
+
       socket.broadcast
         .to(roomId)
         .emit("user_draw", { ...move, timestamp }, socket.id);

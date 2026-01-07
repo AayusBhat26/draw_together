@@ -7,6 +7,7 @@ import { CANVAS_SIZE } from "@/common/constants/canvasSize";
 import { useViewportSize } from "@/common/hooks/useViewportSize";
 import { socket } from "@/common/lib/socket";
 
+import { useImageClick } from "../../hooks/useImageClick";
 import { useBoardPosition } from "../../hooks/useBoardPosition";
 import { useCtx } from "../../hooks/useCtx";
 import { useDraw } from "../../hooks/useDraw";
@@ -32,6 +33,7 @@ const Canvas = () => {
     clearOnYourMove,
   } = useDraw(dragging);
   useSocketDraw(drawing);
+  useImageClick(); // Enable click-to-move for images
 
   const { handleUndo, handleRedo } = useMovesHandlers(clearOnYourMove);
 
@@ -106,9 +108,8 @@ const Canvas = () => {
 
       <MiniMap dragging={dragging} />
       <button
-        className={`absolute bottom-14 right-5 z-10 rounded-xl md:bottom-5 ${
-          dragging ? "bg-green-500" : "bg-zinc-300 text-black"
-        } p-3 text-lg text-white`}
+        className={`absolute bottom-14 right-5 z-10 rounded-xl md:bottom-5 ${dragging ? "bg-green-500" : "bg-zinc-300 text-black"
+          } p-3 text-lg text-white`}
         onClick={() => setDragging((prev) => !prev)}
       >
         <BsArrowsMove />

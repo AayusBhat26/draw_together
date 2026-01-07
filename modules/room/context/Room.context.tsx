@@ -26,12 +26,13 @@ export const roomContext = createContext<{
   bgRef: RefObject<HTMLCanvasElement>;
   selectionRefs: RefObject<HTMLButtonElement[]>;
   minimapRef: RefObject<HTMLCanvasElement>;
-  moveImage: { base64: string; x?: number; y?: number };
+  moveImage: { base64: string; x?: number; y?: number; moveId?: string };
   setMoveImage: Dispatch<
     SetStateAction<{
       base64: string;
       x?: number | undefined;
       y?: number | undefined;
+      moveId?: string | undefined;
     }>
   >;
 }>(null!);
@@ -52,6 +53,7 @@ const RoomContextProvider = ({ children }: { children: ReactChild }) => {
     base64: string;
     x?: number;
     y?: number;
+    moveId?: string;
   }>({ base64: "" });
 
   const x = useMotionValue(0);

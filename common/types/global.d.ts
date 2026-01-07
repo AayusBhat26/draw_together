@@ -31,6 +31,8 @@ export declare global {
     };
     img: {
       base64: string;
+      width?: number;
+      height?: number;
     };
     path: [number, number][];
     options: CtxOptions;

@@ -11,6 +11,13 @@ export const useSocketDraw = (drawing: boolean) => {
     let userIdLater = "";
 
     socket.on("user_draw", (move, userId) => {
+      // Debug logging for image moves
+      if (move.options.shape === "image") {
+        console.log(`[CLIENT] Received image move from user ${userId}`);
+        console.log(`[CLIENT] Image data size: ${move.img?.base64?.length || 0} chars`);
+        console.log(`[CLIENT] Currently drawing: ${drawing}`);
+      }
+
       if (!drawing) {
         handleAddMoveToUser(userId, move);
       } else {

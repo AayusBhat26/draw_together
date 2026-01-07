@@ -29,22 +29,56 @@ const MoveImage = () => {
   const handlePlaceImage = () => {
     const [finalX, finalY] = [getPos(imageX.get(), x), getPos(imageY.get(), y)];
 
-    const move: Move = {
-      ...DEFAULT_MOVE,
-      img: { base64: moveImage.base64 },
-      path: [[finalX, finalY]],
-      options: {
-        ...DEFAULT_MOVE.options,
-        selection: null,
-        shape: "image",
-      },
+    // Load image to get actual dimensions
+    const img = new Image();
+    img.src = moveImage.base64;
+    img.onload = () => {
+      // If editing an existing image (moveId exists), delete the old one first
+      if (moveImage.moveId && moveImage.x !== undefined && moveImage.y !== undefined) {
+        console.log(`[MOVE] Erasing old image at (${moveImage.x}, ${moveImage.y})`);
+
+        // Create an eraser move to delete the old image
+        const eraseMove: Move = {
+          ...DEFAULT_MOVE,
+          rect: {
+            width: img.naturalWidth,
+            height: img.naturalHeight,
+          },
+          path: [[moveImage.x, moveImage.y]],
+          options: {
+            ...DEFAULT_MOVE.options,
+            shape: "rect",
+            mode: "eraser",
+            fillColor: { r: 0, g: 0, b: 0, a: 1 },
+          },
+        };
+
+        socket.emit("draw", eraseMove);
+      }
+
+      // Now place the image at the new position
+      const move: Move = {
+        ...DEFAULT_MOVE,
+        img: {
+          base64: moveImage.base64,
+          width: img.naturalWidth,
+          height: img.naturalHeight,
+        },
+        path: [[finalX, finalY]],
+        options: {
+          ...DEFAULT_MOVE.options,
+          selection: null,
+          shape: "image",
+        },
+      };
+
+      console.log(`[PLACE] Placing image at (${finalX}, ${finalY}), size: ${img.naturalWidth}x${img.naturalHeight}`);
+      socket.emit("draw", move);
+
+      setMoveImage({ base64: "" });
+      imageX.set(50);
+      imageY.set(50);
     };
-
-    socket.emit("draw", move);
-
-    setMoveImage({ base64: "" });
-    imageX.set(50);
-    imageY.set(50);
   };
 
   if (!moveImage.base64) return null;

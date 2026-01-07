@@ -171,9 +171,18 @@ export const useMovesHandlers = (clearOnYourMove: () => void) => {
       const lastMove = sortedMoves[sortedMoves.length - 1];
 
       if (lastMove.options.shape === "image") {
+        console.log(`[RENDER] Loading image for move ${lastMove.id}`);
+        console.log(`[RENDER] Image data: ${lastMove.img?.base64?.substring(0, 50)}...`);
+
         const img = new Image();
         img.src = lastMove.img.base64;
-        img.addEventListener("load", () => drawMove(lastMove, img));
+        img.addEventListener("load", () => {
+          console.log(`[RENDER] Image loaded successfully for move ${lastMove.id}`);
+          drawMove(lastMove, img);
+        });
+        img.addEventListener("error", (e) => {
+          console.error(`[RENDER] Failed to load image for move ${lastMove.id}`, e);
+        });
       } else drawMove(lastMove);
     }
 
